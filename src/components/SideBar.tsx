@@ -1,17 +1,22 @@
 import { Button } from './Button';
 import { useEffect, useState } from 'react';
-import { Content } from './Content';
 
 import { api } from '../services/api';
 
+interface GenreSelectedProps {
+  genrerSelected : {
+    id : number,
+    handleClickButton : (id : number) => void
+  }
+}
 interface GenreResponseProps {
   id: number;
   name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
   title: string;
 }
 
-export function SideBar() {
-  const [selectedGenreId, setSelectedGenreId] = useState(1);
+export function SideBar(props: GenreSelectedProps) {
+  
   const [genres, setGenres] = useState<GenreResponseProps[]>([]);
 
   useEffect(() => {
@@ -19,11 +24,6 @@ export function SideBar() {
       setGenres(response.data);
     });
   }, []);
-
-  function handleClickButton(id: number) {
-    setSelectedGenreId(id);
-  }
-
 
   return (
     <>
@@ -36,14 +36,14 @@ export function SideBar() {
               key={String(genre.id)}
               title={genre.title}
               iconName={genre.name}
-              onClick={() => handleClickButton(genre.id)}
-              selected={selectedGenreId === genre.id}
+              onClick={() => props.genrerSelected.handleClickButton(genre.id)}
+              selected={props.genrerSelected.id === genre.id}
             />
           ))}
         </div>
       </nav>
 
-      <Content genreId={selectedGenreId} />
+      
 
     </>
   )
